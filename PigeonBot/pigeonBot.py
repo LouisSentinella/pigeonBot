@@ -10,6 +10,7 @@ import asyncio
 import csv
 import praw
 import time
+import math
 
 
 commandsList = []
@@ -47,33 +48,25 @@ async def gimmeapigeon(ctx):
 
 @bot.command(name='whenisnextpigeon')
 async def whenisnextpigeon(ctx):
-    await ctx.send(nextPigeonTime + " GMT")
+    timeList = ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "00:00"]
+    timeTest = time.asctime(time.localtime(time.time()))
+    newTime = timeTest.split()
+
+    justTime = newTime[3]
+    nothingElse = justTime[0:2]
+    nothingInt = int(nothingElse)
+
+    nothingInt += 0.1
+    nothingInt = nothingInt / 4
+    await ctx.send( timeList[math.ceil(nothingInt)] + " GMT")
 
 
 
 @bot.event
 async def on_message(message):
-    if (message.author == bot.user) and (message.content != "*imageSent"):
+    if (message.author == bot.user):
         return
-    if message.content == "*imageSent":
-        timeTest = time.asctime(time.localtime(time.time()))
-        newTime = timeTest.split()
 
-        justTime = newTime[3]
-        justHour = justTime[0:2]
-        everythingElse = justTime[2:8]
-        justNextHourInt = int(justHour) + 4
-
-        if justNextHourInt > 24:
-            justNextHourStr = "0" + str(justNextHourInt - 24)
-        elif (justNextHourInt == 24):
-            justNextHourStr = "00"
-        else:
-            justNextHourStr = str(justNextHourInt)
-
-        newTimeNext = justNextHourStr + everythingElse
-        global nextPigeonTime
-        nextPigeonTime = newTimeNext[0:5]
     await bot.process_commands(message)
 
 
