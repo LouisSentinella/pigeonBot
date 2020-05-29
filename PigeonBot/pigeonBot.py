@@ -42,7 +42,7 @@ async def gimmeapigeon(ctx):
 
         if (submission.url.endswith(".jpg")) or (submission.url.endswith(".gif")):
             await ctx.send(submission.url)
-            break
+        break
 
 
 
