@@ -18,7 +18,7 @@ commandsList = []
 
 bot = commands.Bot(command_prefix="=")
 
-token = "Njc1MDAyMDE5MTczNjI5OTYz.Xl_eBw.FrFyNn-MuDO1oRRO3RzZ6xfzBto"
+token = "REDACTED"
 
 tagList = {
     'https://i.redd.it/qe3igt2qau251.jpg': 'Iz Myrtle',
@@ -62,8 +62,8 @@ async def whenisnextpigeon(ctx):
 @bot.command(name='gimmeapigeon')
 async def gimmeapigeon(ctx):
 
-    reddit = praw.Reddit(client_id='-QB_QU_FOTk2kw',
-                         client_secret='4h86E5gl0_uNYdy9oGsQRL6k_Jg',
+    reddit = praw.Reddit(client_id='REDACTED',
+                         client_secret='REDACTED',
                          user_agent='Pigeon Grabber by HurricaneSYG')
 
     while True:
