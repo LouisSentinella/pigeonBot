@@ -11,39 +11,36 @@ import csv
 import praw
 import time
 import math
+import json
 
 
 commandsList = []
 
 bot = commands.Bot(command_prefix="=")
 
-token = "REDACTED"
+token = "Njc1MDAyMDE5MTczNjI5OTYz.Xl_eBw.FrFyNn-MuDO1oRRO3RzZ6xfzBto"
+
+tagList = {
+    'https://i.redd.it/qe3igt2qau251.jpg': 'Iz Myrtle',
+    'https://i.redd.it/hllvel56zw451.jpg': 'Iz Pete'
+
+}
+
+def getKey(key): 
+    if key in tagList.keys(): 
+        return(tagList[key] + ' ');
+    else:
+        return('');
 
 imageSent = None
 
+badPeople2 = ["camelus#4766"]
+badPeople = [698505803090493520]
 
 
 @bot.event
 async def on_ready():
     print ("Ready")
-
-
-@bot.command(name='gimmeapigeon')
-async def gimmeapigeon(ctx):
-
-    reddit = praw.Reddit(client_id='REDACTED',
-                         client_secret='REDACTED',
-                         user_agent='REDACTED')
-
-    while True:
-
-
-        submission = reddit.subreddit("pigeon").random()
-
-        if (submission.url.endswith(".jpg")) or (submission.url.endswith(".gif")):
-            await ctx.send(submission.url)
-        break
-
 
 
 @bot.command(name='whenisnextpigeon')
@@ -62,11 +59,29 @@ async def whenisnextpigeon(ctx):
 
 
 
+@bot.command(name='gimmeapigeon')
+async def gimmeapigeon(ctx):
+
+    reddit = praw.Reddit(client_id='-QB_QU_FOTk2kw',
+                         client_secret='4h86E5gl0_uNYdy9oGsQRL6k_Jg',
+                         user_agent='Pigeon Grabber by HurricaneSYG')
+
+    while True:
+        submission = reddit.subreddit("pigeon").random()
+
+        if (submission.url.endswith(".jpg")) or submission.url.endswith(".png") or (submission.url.endswith(".gif")):
+            tagLine = getKey(submission.url);
+            await ctx.send(tagLine + submission.url)
+            break
+
 @bot.event
 async def on_message(message):
     if (message.author == bot.user):
+	    return
+    #print(message.author.id)
+    if (message.author.id in badPeople):
         return
-
+   
     await bot.process_commands(message)
 
 
