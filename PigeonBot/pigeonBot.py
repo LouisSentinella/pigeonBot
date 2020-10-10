@@ -12,7 +12,7 @@ import praw
 import time
 import math
 import json
-
+from datetime import datetime
 
 commandsList = []
 
@@ -36,7 +36,7 @@ imageSent = None
 
 badPeople2 = ["camelus#4766"]
 badPeople = [698505803090493520]
-
+start = time.time()
 
 @bot.event
 async def on_ready():
@@ -61,18 +61,21 @@ async def whenisnextpigeon(ctx):
 
 @bot.command(name='gimmeapigeon')
 async def gimmeapigeon(ctx):
-
+    global start
+    timeNow = time.time()
     reddit = praw.Reddit(client_id='REDACTED',
                          client_secret='REDACTED',
                          user_agent='Pigeon Grabber by HurricaneSYG')
-
-    while True:
-        submission = reddit.subreddit("pigeon").random()
-
-        if (submission.url.endswith(".jpg")) or submission.url.endswith(".png") or (submission.url.endswith(".gif")):
-            tagLine = getKey(submission.url);
-            await ctx.send(tagLine + submission.url)
-            break
+    if (timeNow - start > 20):
+        while True:
+            submission = reddit.subreddit("pigeon").random()
+            if (submission.url == "https://i.redd.it/j7v2m32k5od51.jpg"):
+                print("badbot")
+            elif (submission.url.endswith(".jpg")) or submission.url.endswith(".png") or (submission.url.endswith(".gif")):
+                tagLine = getKey(submission.url);
+                await ctx.send(tagLine + submission.url)
+                start = time.time() 
+                break
 
 @bot.event
 async def on_message(message):
