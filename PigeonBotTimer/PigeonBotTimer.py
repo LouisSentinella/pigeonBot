@@ -14,7 +14,7 @@ import json
 
 commandsList = []
 
-bot = commands.Bot(command_prefix="=", self_bot=True)
+bot = commands.Bot(command_prefix="=")
 
 token = "REDACTED"
 
@@ -24,6 +24,12 @@ tagList = {
 
 }
 
+images = open("..\last20.txt")
+imageslist = images.read().splitlines()
+images.close()
+badpigeons = open("..\\badpigeons.txt")
+badpigeonslist = badpigeons.read().splitlines()
+badpigeons.close()
 def getKey(key): 
     if key in tagList.keys(): 
         return(tagList[key] + ' ');
@@ -32,7 +38,6 @@ def getKey(key):
 
 @bot.event
 async def on_ready():
-    badBirds = ["https://i.redd.it/j7v2m32k5od51.jpg"]
     channel = bot.get_channel(674755201575419936)
 
     reddit = praw.Reddit(client_id='REDACTED',
@@ -41,14 +46,23 @@ async def on_ready():
 
     while True:
         submission = reddit.subreddit("pigeon").random()
-        if (submission.url in badBirds):
+        if (submission.url in badpigeonslist):
             print("badbot")
+        elif (submission.url in imageslist):
+            print("No")
         elif (submission.url.endswith(".jpg")) or (submission.url.endswith(".png") or (submission.url.endswith(".gif"))):
             channel = bot.get_channel(674755201575419936)
-            tagLine = getKey(submission.url);
+            tagLine = getKey(submission.url)
+
+            imageslist.pop(0)
+            imageslist.append(submission.url)
+
+            f = open("..\last20.txt", "w")
+            f.write('\n'.join(imageslist))
+            f.close()
             await channel.send(tagLine + submission.url)
             break
-    quit()
+    sys.exit("Done")
 
 
 bot.run(token)
