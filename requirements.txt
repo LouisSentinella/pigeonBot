@@ -1,0 +1,6 @@
+git+https://github.com/Rapptz/discord.py
+dnspython==1.16.0
+PyNaCl
+async-timeout==3.0.1
+praw
+python-dotenv
