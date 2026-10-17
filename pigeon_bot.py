@@ -43,6 +43,15 @@ def random_submission(reddit):
     return random.choice(list(reddit.subreddit("pigeon").top(time_filter=period, limit=100)))
 
 def handle_submission(submission):
+    # A post can lack the data a branch expects (for example a v.redd.it link whose .media is None
+    # because it is a crosspost or was removed). Skip such posts instead of raising.
+    try:
+        return _handle_submission(submission)
+    except (TypeError, KeyError, ValueError, AttributeError) as e:
+        print("skipping", getattr(submission, "url", "?"), "-", type(e).__name__, e)
+        return []
+
+def _handle_submission(submission):
 
     if submission.over_18:
         return []
