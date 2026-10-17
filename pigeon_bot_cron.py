@@ -49,6 +49,15 @@ def random_submission(reddit):
     return random.choice(list(reddit.subreddit("pigeon").top(time_filter=period, limit=100)))
 
 def handle_submission(submission):
+    # A post can lack the data a branch expects (for example a v.redd.it link whose .media is None
+    # because it is a crosspost or was removed). Skip such posts instead of crashing.
+    try:
+        return _handle_submission(submission)
+    except (TypeError, KeyError, ValueError, AttributeError) as e:
+        print("skipping", getattr(submission, "url", "?"), "-", type(e).__name__, e)
+        return []
+
+def _handle_submission(submission):
 
     if submission.over_18:
         return []
@@ -74,8 +83,7 @@ def handle_submission(submission):
     else:
         return []
 
-@bot.event
-async def on_ready():
+async def post_pigeon():
     channel = bot.get_channel(674755201575419936)
 
     urls = []
@@ -102,6 +110,12 @@ async def on_ready():
     f.close()
     await channel.send(tagLine + selected_url)
 
-    sys.exit()
+@bot.event
+async def on_ready():
+    # Always close, even if posting fails, so the one-shot container exits instead of hanging.
+    try:
+        await post_pigeon()
+    finally:
+        await bot.close()
 
 bot.run(DISCORD_TOKEN)
