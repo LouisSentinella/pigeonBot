@@ -43,6 +43,11 @@ def getKey(key):
     else:
         return('')
 
+def random_submission(reddit):
+    # Reddit no longer serves /r/<sub>/random (it answers HTTP 400), so sample the top posts of a random period.
+    period = random.choice(["day", "week", "month", "year", "all"])
+    return random.choice(list(reddit.subreddit("pigeon").top(time_filter=period, limit=100)))
+
 def handle_submission(submission):
 
     if submission.over_18:
@@ -75,7 +80,7 @@ async def on_ready():
 
     urls = []
     for i in range(10):
-        submission = reddit.subreddit("pigeon").random()
+        submission = random_submission(reddit)
         urls.extend(handle_submission(submission))
 
     print(urls)

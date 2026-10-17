@@ -1,0 +1,5 @@
+# Credentials: DISCORD_TOKEN, CLIENT_ID, CLIENT_SECRET live here. Never commit this file.
+.env
+.venv/
+__pycache__/
+nohup.out
